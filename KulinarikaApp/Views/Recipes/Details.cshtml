@@ -1,0 +1,81 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@model KulinarikaApp.Models.Recipe
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div class="container">
+    <div class="row">
+        <h1 class="capitalizeFirstLetter">@Html.DisplayFor(model => model.Title)</h1>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <h4>Kuhar: @Model.User.FristName @Model.User.LastName</h4>
+        </div>
+        <div class="col-4" style="text-align: right">
+            @if (UserManager.GetUserId(User) == Model.User.Id)
+            {
+                <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model?.Id">Remove</a>
+            }
+            @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User) != Model.User.Id)
+            {
+                <a asp-controller="Bookmarks" asp-action="Create" asp-route-id="@Model?.Id">Add bookmark</a>
+            }
+        </div>
+
+    </div>
+    <hr/>
+    <div class="row ">
+        <div class="col-12">
+            <p style="font-family: Arial,serif">@Html.DisplayFor(model => model.RecipeText)</p>
+        </div>
+    </div>
+
+</div>
+<hr/>
+
+
+<div class="container" style="border: 1px solid darkgrey">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-4">
+                <form id="myForm" asp-action="AddComment" asp-route-id="@Model.Id" method="post">
+                    <input type="text" name="commentText" class="form-control"/>
+                    <input type="submit" class="btn btn-primary" value="Komentiraj" style="margin-top: 5px; margin-bottom: 15px"/>
+                </form>
+
+            </div>
+        </div>
+    }
+
+
+    @if (Model.Comments != null)
+    {
+        foreach (var item in Model.Comments)
+        {
+            <hr/>
+            <div class="container" style="margin: 10px">
+                <div class="row" style="">
+                    <p class="fw-bold" style="color: rgba(59,130,246,0.5)">
+                        @{
+                            // TODO: Ugotovi zakaj prihaja do težave da je User lahko null
+                            string username;
+                            if (item.User == null)
+                                username = "Uporabnik";
+                            else
+                                username = item.User.FristName + " " + item.User.LastName;
+                        }
+                        @username
+                    </p>
+                </div>
+                <div class="row">
+                    <p>@item.CommentText</p>
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,43 @@
+﻿@model KulinarikaApp.Models.Recipe
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<script src="~/ckeditor5-build-classic/ckeditor.js"></script>
+<h1>Ustvari recept</h1>
+
+<hr/>
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label">Naslov recepta</label>
+                <input asp-for="Title" class="form-control"/>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecipeText" class="control-label">Tekst</label>
+                <textarea asp-for="RecipeText" class="form-control editorid ck-editor"></textarea>
+                <span asp-validation-for="RecipeText" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3 mb-3">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script src="~/ckeditor5-build-classic/ckeditor.js"></script>
+    <script>        
+        CKEDITOR.replace("editorid");
+    </script>
+}

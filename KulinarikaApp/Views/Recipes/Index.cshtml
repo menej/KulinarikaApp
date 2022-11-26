@@ -1,0 +1,47 @@
+﻿@using Humanizer
+@model IEnumerable<KulinarikaApp.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Recepti</h1>
+
+@{
+    System.Diagnostics.Debug.Assert(User.Identity != null, "User.Identity != null");
+}
+@if (User.Identity.IsAuthenticated)
+{
+
+    <a asp-action="Create" class="btn btn-primary">Ustvari nov recept</a>
+
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            <p>Naslov</p>
+        </th>
+        <th>
+            <p>Uporabnik</p>
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr asp-action="Details">
+            <td>
+                <a class="styledLink" asp-action="Details" asp-route-id="@item.Id">
+                    @item.Title.Transform(To.SentenceCase)
+                </a>
+            </td>
+            <td>
+                <p>@item.User.FristName @item.User.LastName</p>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

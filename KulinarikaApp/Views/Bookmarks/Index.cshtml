@@ -1,0 +1,27 @@
+﻿@model IEnumerable<KulinarikaApp.Models.Bookmark>
+
+@{
+    ViewBag.Title = "Index";
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+
+<p>Shranjeni zaznamki:</p>
+<div class="container">
+    @foreach (var item in Model)
+    {
+        <div class="row">
+            <div class="col-10">
+                <a class="styledLink" asp-controller="Recipes" asp-action="Details" asp-route-id="@item.RecipeId">
+                    @item.BookmarkName
+                </a>
+            </div>
+            <div class="col-2">
+                <a class="btn btn-secondary btn-danger py-0" asp-action="Delete" asp-route-id="@item.Id">
+                    Remove
+                </a>
+            </div>
+        </div>
+        <hr/>
+    }
+</div>
