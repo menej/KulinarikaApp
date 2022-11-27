@@ -10,12 +10,22 @@
 @{
     System.Diagnostics.Debug.Assert(User.Identity != null, "User.Identity != null");
 }
+
 @if (User.Identity.IsAuthenticated)
 {
-
     <a asp-action="Create" class="btn btn-primary">Ustvari nov recept</a>
-
 }
+
+<form asp-action="Index" method="get">
+    <div class="form-control no-color">
+        <p>
+            Iskanje po naslovu: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]"/>
+            <input type="submit" value="Search" class="btn btn-primary"/> |
+            <a asp-action="Index">Nazaj na celoten seznam</a>
+        </p>
+    </div>
+</form>
+
 
 <table class="table">
     <thead>
@@ -23,7 +33,7 @@
         <th>
             <p>Naslov</p>
         </th>
-        <th>
+        <th style="text-align: right">
             <p>Uporabnik</p>
         </th>
         <th></th>
@@ -38,7 +48,7 @@
                     @item.Title.Transform(To.SentenceCase)
                 </a>
             </td>
-            <td>
+            <td style="text-align: right">
                 <p>@item.User.FristName @item.User.LastName</p>
             </td>
         </tr>
