@@ -34,10 +34,21 @@ namespace KulinarikaApp.Controllers
         }
 
         // GET: Recipes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Recipes.Include(r => r.User);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+
+            var recipes = _context.Recipes
+                .Include(r => r.User)
+                .AsNoTracking();
+            
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recipes = recipes.Where(s => s.Title.Contains(searchString));
+            }
+
+            return View(await recipes.ToListAsync());
         }
 
         // GET: Recipes/Details/5
@@ -333,7 +344,7 @@ namespace KulinarikaApp.Controllers
             newComment.User = user;
             newComment.Recipe = _context.Recipes.Include(i => i.Id == recipe.Id).First();
 
-            
+
             try
             {
                 _context.Update(newComment);
