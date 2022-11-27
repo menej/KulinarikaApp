@@ -308,28 +308,6 @@ namespace KulinarikaApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Recipes/ShowSearchForm
-        public async Task<IActionResult> ShowSearchForm()
-        {
-            return View();
-        }
-
-        // Post: Recipes/ShowSearchResults
-        public async Task<IActionResult> ShowSearchResults(string Phrase)
-        {
-            var applicationDbContext = _context.Recipes.Include(r => r.User);
-
-            return View("Index", await applicationDbContext.Where(j => j.Title.Contains(Phrase)).ToListAsync());
-            /*
-            _context.Recipes.Include(r => r.User).
-
-            return View("Index", await applicationDbContext.ToListAsync());
-            
-            return RedirectToAction(nameof(Index),
-                await _context.Recipes.Where(j => j.Title.Contains(Phrase)).ToListAsync());
-            return RedirectToPage("Index", await _context.Recipes.Where(j => j.Title.Contains(Phrase)).ToListAsync());*/
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddComment(string commentText, Recipe recipe)
         {
