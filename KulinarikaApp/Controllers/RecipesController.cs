@@ -309,20 +309,18 @@ namespace KulinarikaApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddComment(string commentText, Recipe recipe)
+        public async Task<IActionResult> AddComment(string commentText, int id)
         {
             var user = await _userManager.GetUserAsync(User);
-            //comment.UserId = _userManager.GetUserId(User);
-            //var user = await _context.Users.FindAsync(_userManager.GetUserId(User));
-            if (user == null || recipe.Id == 0)
+
+            if (user == null || id == 0)
                 return NotFound();
 
             Comment newComment = new Comment();
             newComment.CommentText = commentText;
             newComment.User = user;
-            newComment.Recipe = _context.Recipes.Include(i => i.Id == recipe.Id).First();
-
-
+            newComment.Recipe = await _context.Recipes.FirstOrDefaultAsync(i => i.Id == id);
+            
             try
             {
                 _context.Update(newComment);
@@ -330,9 +328,12 @@ namespace KulinarikaApp.Controllers
             }
             catch (DbUpdateException)
             {
-                throw;
+                ModelState.AddModelError("", 
+                    "Unable to save changes. " +
+                    "Try again, and if the problem persists " + 
+                    "See your system administrator.");
             }
-
+            
             return RedirectToAction("Details", newComment.Recipe);
         }
 

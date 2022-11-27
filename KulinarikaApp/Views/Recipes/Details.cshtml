@@ -10,6 +10,7 @@
     <div class="row">
         <h1 class="capitalizeFirstLetter">@Html.DisplayFor(model => model.Title)</h1>
     </div>
+    
     <div class="row">
         <div class="col-8">
             <h4>Kuhar: @Model.User.FristName @Model.User.LastName</h4>
@@ -25,7 +26,6 @@
                 <a asp-controller="Bookmarks" asp-action="Create" asp-route-id="@Model?.Id">Add bookmark</a>
             }
         </div>
-
     </div>
     <hr/>
     <div class="row ">
@@ -33,7 +33,6 @@
             <p style="font-family: Arial,serif">@Html.DisplayFor(model => model.RecipeText)</p>
         </div>
     </div>
-
 </div>
 <hr/>
 
@@ -47,7 +46,6 @@
                     <input type="text" name="commentText" class="form-control"/>
                     <input type="submit" class="btn btn-primary" value="Komentiraj" style="margin-top: 5px; margin-bottom: 15px"/>
                 </form>
-
             </div>
         </div>
     }
