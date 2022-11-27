@@ -34,10 +34,21 @@ namespace KulinarikaApp.Controllers
         }
 
         // GET: Recipes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Recipes.Include(r => r.User);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+
+            var recipes = _context.Recipes
+                .Include(r => r.User)
+                .AsNoTracking();
+            
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recipes = recipes.Where(s => s.Title.Contains(searchString));
+            }
+
+            return View(await recipes.ToListAsync());
         }
 
         // GET: Recipes/Details/5
@@ -297,42 +308,18 @@ namespace KulinarikaApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Recipes/ShowSearchForm
-        public async Task<IActionResult> ShowSearchForm()
-        {
-            return View();
-        }
-
-        // Post: Recipes/ShowSearchResults
-        public async Task<IActionResult> ShowSearchResults(string Phrase)
-        {
-            var applicationDbContext = _context.Recipes.Include(r => r.User);
-
-            return View("Index", await applicationDbContext.Where(j => j.Title.Contains(Phrase)).ToListAsync());
-            /*
-            _context.Recipes.Include(r => r.User).
-
-            return View("Index", await applicationDbContext.ToListAsync());
-            
-            return RedirectToAction(nameof(Index),
-                await _context.Recipes.Where(j => j.Title.Contains(Phrase)).ToListAsync());
-            return RedirectToPage("Index", await _context.Recipes.Where(j => j.Title.Contains(Phrase)).ToListAsync());*/
-        }
-
         [HttpPost]
-        public async Task<IActionResult> AddComment(string commentText, Recipe recipe)
+        public async Task<IActionResult> AddComment(string commentText, int id)
         {
             var user = await _userManager.GetUserAsync(User);
-            //comment.UserId = _userManager.GetUserId(User);
-            //var user = await _context.Users.FindAsync(_userManager.GetUserId(User));
-            if (user == null || recipe.Id == 0)
+
+            if (user == null || id == 0)
                 return NotFound();
 
             Comment newComment = new Comment();
             newComment.CommentText = commentText;
             newComment.User = user;
-            newComment.Recipe = _context.Recipes.Include(i => i.Id == recipe.Id).First();
-
+            newComment.Recipe = await _context.Recipes.FirstOrDefaultAsync(i => i.Id == id);
             
             try
             {
@@ -341,9 +328,12 @@ namespace KulinarikaApp.Controllers
             }
             catch (DbUpdateException)
             {
-                throw;
+                ModelState.AddModelError("", 
+                    "Unable to save changes. " +
+                    "Try again, and if the problem persists " + 
+                    "See your system administrator.");
             }
-
+            
             return RedirectToAction("Details", newComment.Recipe);
         }
 
