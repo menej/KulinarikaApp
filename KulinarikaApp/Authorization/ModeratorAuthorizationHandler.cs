@@ -24,7 +24,7 @@ public class RecipeModeratorAuthorizationHandler : AuthorizationHandler<Operatio
             return Task.CompletedTask;
         }
         
-        if (context.User.IsInRole(Constants.RecipeModeratorRole))
+        if (context.User.IsInRole(Constants.ModeratorRole))
             context.Succeed(requirement);
 
         return Task.CompletedTask;

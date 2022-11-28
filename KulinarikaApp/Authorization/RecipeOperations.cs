@@ -17,5 +17,5 @@ public class Constants
     public static readonly string UpdateOperationName = "Update";
     public static readonly string DeleteOperationName = "Delete";
 
-    public static readonly string RecipeModeratorRole = "RecipeModerator";
+    public static readonly string ModeratorRole = "Moderator";
 }
