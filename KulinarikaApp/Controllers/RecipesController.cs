@@ -97,7 +97,7 @@ namespace KulinarikaApp.Controllers
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                 User, recipe, RecipeOperations.Create);
-
+            
             if (isAuthorized.Succeeded == false)
                 return Forbid();
 
@@ -139,7 +139,7 @@ namespace KulinarikaApp.Controllers
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                 User, recipe, RecipeOperations.Update);
-
+            
             if (isAuthorized.Succeeded == false)
                 return Forbid();
 
@@ -232,11 +232,14 @@ namespace KulinarikaApp.Controllers
             {
                 return NotFound();
             }
-
-            var isAuthorized = await _authorizationService.AuthorizeAsync(
+            
+            // TODO: UPDATE THE AUTHORIZATION SO THAT IT SUPPORTS THE DELETION PROCESS FOR MODERATOR
+            var isCreator = await _authorizationService.AuthorizeAsync(
                 User, recipe, RecipeOperations.Delete);
-
-            if (isAuthorized.Succeeded == false)
+            
+            var isModerator = User.IsInRole(Constants.ModeratorRole);
+            
+            if (isCreator.Succeeded == false && isModerator == false)
                 return Forbid();
 
             return View(recipe);
