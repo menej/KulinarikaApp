@@ -16,10 +16,7 @@ public class RecipeModeratorAuthorizationHandler : AuthorizationHandler<Operatio
             return Task.CompletedTask;
         
         // Checking if the operations are in order
-        if (requirement.Name != Constants.CreateOperationName &&
-            requirement.Name != Constants.ReadOperationName &&
-            requirement.Name != Constants.UpdateOperationName &&
-            requirement.Name != Constants.DeleteOperationName)
+        if (requirement.Name != Constants.DeleteOperationName)
         {
             return Task.CompletedTask;
         }
