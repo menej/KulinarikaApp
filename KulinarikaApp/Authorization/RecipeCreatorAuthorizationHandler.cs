@@ -30,7 +30,7 @@ public class RecipeCreatorAuthorization : AuthorizationHandler<OperationAuthoriz
             requirement.Name != Constants.UpdateOperationName &&
             requirement.Name != Constants.DeleteOperationName)
         {
-            return Task.CompletedTask; // the user is trying to do something else (this handler is not meant for this)
+            return Task.CompletedTask;
         }
 
         if (recipe.UserId == _userManager.GetUserId(context.User)) // We have the user
