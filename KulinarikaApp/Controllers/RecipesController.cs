@@ -38,7 +38,6 @@ namespace KulinarikaApp.Controllers
         {
             ViewData["CurrentFilter"] = searchString;
 
-
             var recipes = _context.Recipes
                 .Include(r => r.User)
                 .AsNoTracking();
@@ -69,19 +68,7 @@ namespace KulinarikaApp.Controllers
             {
                 return NotFound();
             }
-
-            /*
-            var comments = _context.Comments.Where(t => t.RecipeId == recipe.Id);
             
-            foreach (var sComment in comments)
-            {
-                var commentUser =
-                    from i in _context.Users
-                    where sComment.UserId == i.Id
-                    select i;
-                sComment.User = commentUser.First();
-                recipe.Comments.Add(sComment);
-            }*/
             return View(recipe);
         }
 
