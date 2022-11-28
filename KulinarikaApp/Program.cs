@@ -34,6 +34,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     options.User.RequireUniqueEmail = true;
 });
+
 /*
 builder.Services.AddAuthorization(options =>
 {
@@ -45,6 +46,7 @@ builder.Services.AddAuthorization(options =>
 
 
 builder.Services.AddScoped<IAuthorizationHandler, RecipeCreatorAuthorization>();
+builder.Services.AddSingleton<IAuthorizationHandler, RecipeModeratorAuthorizationHandler>();
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
