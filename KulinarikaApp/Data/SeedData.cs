@@ -15,8 +15,12 @@ public class SeedData
         await using (var context = new ApplicationDbContext(
                          serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
         {
+            // Add normal users
+            await EnsureUser(serviceProvider, "demo1@test.com", password, "Andrej", "Novak");
+            await EnsureUser(serviceProvider, "demo2@test.com", password, "Berta", "Bizjak");
+        
             // Add moderators
-            var moderatorUid = await EnsureUser(serviceProvider, "moderator@test.com", password);
+            var moderatorUid = await EnsureUser(serviceProvider, "moderator@test.com", password, "Moderator", "Moderator");
             var identityResult = await EnsureRole(serviceProvider, moderatorUid, Constants.ModeratorRole);
         }
     }
@@ -24,7 +28,9 @@ public class SeedData
     private static async Task<string> EnsureUser(
         IServiceProvider serviceProvider,
         string userName,
-        string initialPassword)
+        string initialPassword,
+        string firstName,
+        string lastName)
     {
         var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
 
@@ -35,8 +41,8 @@ public class SeedData
         {
             user = new ApplicationUser
             {
-                FristName = "Moderator",
-                LastName = "Moderator",
+                FristName = firstName,
+                LastName = lastName,
                 UserName = userName,
                 Email = userName,
                 EmailConfirmed = true
