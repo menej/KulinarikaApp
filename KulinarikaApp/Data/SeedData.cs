@@ -64,7 +64,7 @@ public class SeedData
         var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
 
         if (roleManager == null)
-            throw new Exception("No RoleManager service found. Registered as a service?");
+            throw new Exception("No RoleManager service found. Is it registered as a service?");
 
         IdentityResult identityResult;
 
