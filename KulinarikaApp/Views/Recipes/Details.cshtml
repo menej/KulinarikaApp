@@ -1,8 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using KulinarikaApp.Authorization
+@using Microsoft.AspNetCore.Authorization
+
 @inject UserManager<ApplicationUser> UserManager
+@inject IAuthorizationService AuthorizationService
+
 @model KulinarikaApp.Models.Recipe
+
 @{
     ViewData["Title"] = "Details";
+}
+
+@{
+    var isAuthorizedDelete = await AuthorizationService.AuthorizeAsync(
+        User, Model, RecipeOperations.Delete);
 }
 
 
@@ -10,13 +21,13 @@
     <div class="row">
         <h1 class="capitalizeFirstLetter">@Html.DisplayFor(model => model.Title)</h1>
     </div>
-    
+
     <div class="row">
         <div class="col-8">
             <h4>Kuhar: @Model.User.FristName @Model.User.LastName</h4>
         </div>
         <div class="col-4" style="text-align: right">
-            @if (UserManager.GetUserId(User) == Model.User.Id)
+            @if (isAuthorizedDelete.Succeeded)
             {
                 <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
                 <a asp-action="Delete" asp-route-id="@Model?.Id">Remove</a>
@@ -49,26 +60,15 @@
             </div>
         </div>
     }
-
-
     @if (Model.Comments != null)
     {
         foreach (var item in Model.Comments)
         {
+            string username = item.User.FristName + " " + item.User.LastName;
             <hr/>
             <div class="container" style="margin: 10px">
                 <div class="row" style="">
-                    <p class="fw-bold" style="color: rgba(59,130,246,0.5)">
-                        @{
-                            // TODO: Ugotovi zakaj prihaja do težave da je User lahko null
-                            string username;
-                            if (item.User == null)
-                                username = "Uporabnik";
-                            else
-                                username = item.User.FristName + " " + item.User.LastName;
-                        }
-                        @username
-                    </p>
+                    <p class="fw-bold" style="color: rgba(59,130,246,0.5)">@username</p>
                 </div>
                 <div class="row">
                     <p>@item.CommentText</p>

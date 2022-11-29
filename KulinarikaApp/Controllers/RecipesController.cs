@@ -233,13 +233,12 @@ namespace KulinarikaApp.Controllers
                 return NotFound();
             }
             
-            // TODO: UPDATE THE AUTHORIZATION SO THAT IT SUPPORTS THE DELETION PROCESS FOR MODERATOR
-            var isCreator = await _authorizationService.AuthorizeAsync(
+            var isAuthorized = await _authorizationService.AuthorizeAsync(
                 User, recipe, RecipeOperations.Delete);
             
-            var isModerator = User.IsInRole(Constants.ModeratorRole);
-            
-            if (isCreator.Succeeded == false && isModerator == false)
+            // var isModerator = User.IsInRole(Constants.ModeratorRole);
+
+            if (isAuthorized.Succeeded == false)
                 return Forbid();
 
             return View(recipe);
