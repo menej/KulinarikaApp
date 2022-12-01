@@ -41,7 +41,7 @@ namespace KulinarikaApp.Controllers
             var recipes = _context.Recipes
                 .Include(r => r.User)
                 .AsNoTracking();
-            
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 recipes = recipes.Where(s => s.Title.Contains(searchString));
@@ -68,7 +68,7 @@ namespace KulinarikaApp.Controllers
             {
                 return NotFound();
             }
-            
+
             return View(recipe);
         }
 
@@ -97,7 +97,7 @@ namespace KulinarikaApp.Controllers
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                 User, recipe, RecipeOperations.Create);
-            
+
             if (isAuthorized.Succeeded == false)
                 return Forbid();
 
@@ -139,7 +139,7 @@ namespace KulinarikaApp.Controllers
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                 User, recipe, RecipeOperations.Update);
-            
+
             if (isAuthorized.Succeeded == false)
                 return Forbid();
 
@@ -232,10 +232,10 @@ namespace KulinarikaApp.Controllers
             {
                 return NotFound();
             }
-            
+
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                 User, recipe, RecipeOperations.Delete);
-            
+
             // var isModerator = User.IsInRole(Constants.ModeratorRole);
 
             if (isAuthorized.Succeeded == false)
@@ -297,7 +297,9 @@ namespace KulinarikaApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // CREATE COMMENT -> should probably create CommentController
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddComment(string commentText, int id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -309,7 +311,7 @@ namespace KulinarikaApp.Controllers
             newComment.CommentText = commentText;
             newComment.User = user;
             newComment.Recipe = await _context.Recipes.FirstOrDefaultAsync(i => i.Id == id);
-            
+
             try
             {
                 _context.Update(newComment);
@@ -317,13 +319,39 @@ namespace KulinarikaApp.Controllers
             }
             catch (DbUpdateException)
             {
-                ModelState.AddModelError("", 
+                ModelState.AddModelError("",
                     "Unable to save changes. " +
-                    "Try again, and if the problem persists " + 
+                    "Try again, and if the problem persists " +
                     "See your system administrator.");
             }
-            
+
             return RedirectToAction("Details", newComment.Recipe);
+        }
+
+        // DELETE COMMENT
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            if (_context.Comments == null)
+                return Problem("Entity set 'Application.Bookmarks' is null");
+
+            var comment = await _context.Comments
+                .Include(r => r.Recipe)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (comment == null)
+                return NotFound();
+            
+            var recipeId = comment.RecipeId;
+
+            if (recipeId == null)
+                return Problem("Comment exists without recipe?");
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), recipeId);
         }
 
         private bool RecipeExists(int id)
