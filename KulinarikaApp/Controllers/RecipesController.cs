@@ -348,11 +348,13 @@ namespace KulinarikaApp.Controllers
             var recipeId = comment.RecipeId;
 
             if (recipeId == null)
-                return Problem("Comment exists without recipe?");
+                return Problem($"Comment with id {comment.Id} exists without recipe?");
 
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(i => i.Id == recipeId);
+            
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Details), recipeId);
+            return RedirectToAction(nameof(Details), recipe);
         }
 
         private bool RecipeExists(int id)
