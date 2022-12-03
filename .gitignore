@@ -452,3 +452,9 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+
+##
+## VScode project settings (in future remove this, for now leave, because no secrets)
+##
+appsettings.json
