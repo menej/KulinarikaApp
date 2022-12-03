@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 
-namespace KulinarikaApp.Authorization;
+namespace KulinarikaApp.Authorization.RecipeAuthorization;
 
 public class RecipeModeratorAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Recipe>
 {

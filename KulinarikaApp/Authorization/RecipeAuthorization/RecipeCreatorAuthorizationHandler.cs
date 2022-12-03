@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 
-namespace KulinarikaApp.Authorization;
+namespace KulinarikaApp.Authorization.RecipeAuthorization;
 
 public class RecipeCreatorAuthorization : AuthorizationHandler<OperationAuthorizationRequirement, Recipe>
 {
