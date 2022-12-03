@@ -458,3 +458,4 @@ $RECYCLE.BIN/
 ## VScode project settings (in future remove this, for now leave, because no secrets)
 ##
 appsettings.json
+appsettings.Development.json
