@@ -1,2 +1,4 @@
 # KulinarikaApp
-A web app that offers the publication of recepies by home cooks.
+Project made by: Enej Mastnak 
+
+Kulinarika is a web app that offers effortless access to home cooking recipes written by home cooks.
