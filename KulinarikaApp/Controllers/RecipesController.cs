@@ -330,7 +330,7 @@ namespace KulinarikaApp.Controllers
         }
 
         // DELETE COMMENT
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
