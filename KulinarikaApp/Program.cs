@@ -1,16 +1,44 @@
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using KulinarikaApp.Authorization;
+using KulinarikaApp.Authorization.RecipeAuthorization;
 using KulinarikaApp.Data;
 using KulinarikaApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+// Getting Connection String from Azure Key Vault secrets
+SecretClientOptions options = new SecretClientOptions()
+{
+    Retry =
+    {
+        Delay = TimeSpan.FromSeconds(2),
+        MaxDelay = TimeSpan.FromSeconds(16),
+        MaxRetries = 5,
+        Mode = RetryMode.Exponential
+    }
+};
 
+var client = new SecretClient(new Uri("https://klinarika-secret-vault.vault.azure.net/"), new DefaultAzureCredential(),
+    options);
+
+KeyVaultSecret secret = client.GetSecret("ConnectionStrings--AzureContext");
+var secretValue = secret.Value;
+
+
+var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(secretValue));
+
+/* This should only be used locale -> connection string should be in secrets
+// No idea if this or what is standard practice here, but I guess it works
+var connectionString = builder.Configuration.GetConnectionString("AzureContext");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));*/
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -33,7 +61,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 });
 
-/*
+/* Enabling global authorization
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
