@@ -10,7 +10,7 @@ using KulinarikaApp.Models;
 
 namespace KulinarikaApp.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/Recipe")]
     [ApiController]
     public class RecipeApiController : ControllerBase
     {
