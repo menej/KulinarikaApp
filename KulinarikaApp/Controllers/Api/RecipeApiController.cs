@@ -25,10 +25,11 @@ namespace KulinarikaApp.Controllers.Api
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
-          if (_context.Recipes == null)
-          {
-              return NotFound();
-          }
+            if (_context.Recipes == null)
+            {
+                return NotFound();
+            }
+
             return await _context.Recipes.ToListAsync();
         }
 
@@ -36,10 +37,11 @@ namespace KulinarikaApp.Controllers.Api
         [HttpGet("{id}")]
         public async Task<ActionResult<Recipe>> GetRecipe(int id)
         {
-          if (_context.Recipes == null)
-          {
-              return NotFound();
-          }
+            if (_context.Recipes == null)
+            {
+                return NotFound();
+            }
+
             var recipe = await _context.Recipes.FindAsync(id);
 
             if (recipe == null)
@@ -86,10 +88,11 @@ namespace KulinarikaApp.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
-          if (_context.Recipes == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Recipes'  is null.");
-          }
+            if (_context.Recipes == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Recipes'  is null.");
+            }
+
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
 
@@ -104,6 +107,7 @@ namespace KulinarikaApp.Controllers.Api
             {
                 return NotFound();
             }
+
             var recipe = await _context.Recipes.FindAsync(id);
             if (recipe == null)
             {
