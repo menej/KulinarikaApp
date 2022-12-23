@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KulinarikaApp.Data;
+using KulinarikaApp.Filters;
 using KulinarikaApp.Models;
 
 namespace KulinarikaApp.Controllers.Api
 {
     [Route("api/v1/Recipe")]
     [ApiController]
+    [ApiKeyAuth]
     public class RecipeApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
