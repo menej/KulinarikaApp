@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 // Getting Connection String from Azure Key Vault secrets
-SecretClientOptions options = new SecretClientOptions()
+/*SecretClientOptions options = new SecretClientOptions()
 {
     Retry =
     {
@@ -26,19 +26,19 @@ var client = new SecretClient(new Uri("https://klinarika-secret-vault.vault.azur
 
 KeyVaultSecret secret = client.GetSecret("ConnectionStrings--AzureContext");
 var secretValue = secret.Value;
-
+*/
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-
+/*
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(secretValue));
-
-/* This should only be used locale -> connection string should be in secrets
+*/
+// This should only be used locale -> connection string should be in secrets
 // No idea if this or what is standard practice here, but I guess it works
 var connectionString = builder.Configuration.GetConnectionString("AzureContext");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));*/
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -76,6 +76,8 @@ builder.Services.AddSingleton<IAuthorizationHandler, RecipeModeratorAuthorizatio
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Run our SeedData
@@ -100,6 +102,13 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// The use of swagger
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/api/v1/swagger.json", "My API V1");
+});
 
 app.UseRouting();
 

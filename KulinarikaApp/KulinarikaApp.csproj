@@ -13,14 +13,21 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Other\Bookmarks.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Api" />
   </ItemGroup>
 
 </Project>
